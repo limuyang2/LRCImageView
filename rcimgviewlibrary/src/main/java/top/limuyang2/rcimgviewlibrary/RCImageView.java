@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 
 /**
  * 圆型或者圆角图片（带有边框效果），适配了ImageView的ScaleType属性
- *
+ * <p>
  * Created by lmy
  * 2018/10/22.
  * 主要有两种方式实现，Xfermode方式和bitmapShader方式
@@ -29,7 +29,7 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
     private static final int TYPE_NORMAL = -1;
     private static final int TYPE_CIRCLE = 0;
     private static final int TYPE_ROUND = 1;
-    private static final int BODER_RADIUS_DEFAULT = 10;
+    private static final int BORDER_RADIUS_DEFAULT = 10;
     private static final int BORDER_WIDTH = 0;
     private static final int BORDER_COLOR = Color.BLACK;
 
@@ -38,11 +38,10 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
     private int border_width;
     private int border_color;
     private Paint paint;
-    private Paint boder_paint;
+    private Paint border_paint;
     private Matrix matrix;
     private int width;
     private int radius;
-    private BitmapShader bitmapShader;
     private RectF rectF;
 
     public RCImageView(Context context) {
@@ -51,16 +50,16 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
 
     public RCImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        inital(context, attrs);
+        initAttr(context, attrs);
     }
 
-    private void inital(Context context, AttributeSet attrs) {
+    private void initAttr(Context context, AttributeSet attrs) {
         matrix = new Matrix();
         paint = new Paint();
-        boder_paint = new Paint();
+        border_paint = new Paint();
         TypedArray array = context.obtainStyledAttributes(attrs,
                 R.styleable.RCImageView);
-        borderRadius = array.getDimensionPixelOffset(R.styleable.RCImageView_rc_borderRadius, BODER_RADIUS_DEFAULT);
+        borderRadius = array.getDimensionPixelOffset(R.styleable.RCImageView_rc_borderRadius, BORDER_RADIUS_DEFAULT);
         type = array.getInt(R.styleable.RCImageView_rc_type, TYPE_NORMAL);
         border_width = array.getDimensionPixelOffset(R.styleable.RCImageView_rc_borderWidth, BORDER_WIDTH);
         border_color = array.getColor(R.styleable.RCImageView_rc_borderColor, BORDER_COLOR);
@@ -85,7 +84,7 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
         if (bitmap == null) {
             return;
         }
-        bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        BitmapShader bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         float scale = 1.0f;
         int viewWidth = getWidth();
         int viewHeight = getHeight();
@@ -165,22 +164,20 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
             return;
         }
         paint.setAntiAlias(true);
-        boder_paint.setAntiAlias(true);
-        boder_paint.setStyle(Paint.Style.STROKE);
-        boder_paint.setColor(border_color);
-        boder_paint.setStrokeWidth(border_width);
+        border_paint.setAntiAlias(true);
+        border_paint.setStyle(Paint.Style.STROKE);
+        border_paint.setColor(border_color);
+        border_paint.setStrokeWidth(border_width);
         setBitmapShader();
         if (type == TYPE_ROUND) {
-            canvas.drawRoundRect(rectF, borderRadius, borderRadius,
-                    paint);
+            canvas.drawRoundRect(rectF, borderRadius, borderRadius, paint);
             if (border_width > 0) {
-                canvas.drawRoundRect(rectF, borderRadius, borderRadius,
-                        boder_paint);
+                canvas.drawRoundRect(rectF, borderRadius, borderRadius, border_paint);
             }
         } else if (type == TYPE_CIRCLE) {
             canvas.drawCircle(radius, radius, radius, paint);
             if (border_width > 0) {
-                canvas.drawCircle(radius, radius, radius - border_width / 2, boder_paint);
+                canvas.drawCircle(radius, radius, radius - border_width / 2, border_paint);
             }
         } else {
             getDrawable().draw(canvas);
@@ -199,7 +196,7 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
             return;
         }
         this.border_color = border_color;
-        boder_paint.setColor(border_color);
+        border_paint.setColor(border_color);
         invalidate();
     }
 
