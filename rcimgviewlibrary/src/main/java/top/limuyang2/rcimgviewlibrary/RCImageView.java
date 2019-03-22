@@ -41,7 +41,7 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
     private Paint border_paint;
     private Matrix matrix;
     private int width;
-    private int radius;
+    private float radius;
     private RectF rectF;
 
     public RCImageView(Context context) {
@@ -70,7 +70,7 @@ public class RCImageView extends android.support.v7.widget.AppCompatImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (type == TYPE_CIRCLE) {
             width = Math.min(getMeasuredWidth(), getMeasuredHeight());
-            radius = width / 2 - border_width / 2;
+            radius = width / 2f - border_width / 2f;
             setMeasuredDimension(width, width);
         }
     }
